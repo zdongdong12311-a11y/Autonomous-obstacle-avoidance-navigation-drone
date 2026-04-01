@@ -1,10 +1,1 @@
 ⊂(・(ェ)・)自主导航避障识别测距的轻量无人机(・(ェ)・)⊃
-  首先需要确保你安装了前置功能包，下面会为你一一列出，并附带
-编译错误解决方式。
-1)https://github.com/realsenseai/librealsense.git
-librealsense最新版，
-2)
-3)
-4)
-5)
-6)
