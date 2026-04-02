@@ -183,6 +183,13 @@ rosrun kalibr kalibr_calibrate_cameras --bag /home/imu_stereo.bag --cam /home/ch
 根据camchain-imucam-homezjimu_stereo.yaml中的相机内参和畸变参数填写，结果如下：
 （1）left.yaml
 （2）right.yaml
+WARN：可以直接查看和使用官方标定好的left.yaml、right.yaml的内参数据:
+在realsense-ros工作空间下：roslaunch realsense2_camera rs_camera.launch
+Ⅰ、左目：rostopic echo /camera/infra1/camera_info
+Ⅱ、右目：rostopic echo /camera/infra2/camera_info
+得到：[fx,cx]
+      [fy,cy]的参数矩阵
+直接修改即可.
 
 五、飞控与d455的外参矩阵标定：
 1、启动px4:
