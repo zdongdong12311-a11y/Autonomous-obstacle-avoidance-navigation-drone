@@ -26,11 +26,17 @@ catkin_make
 
 4、下载编译Kalibr
 参考官方教程https://github.com/ethz-asl/kalibr/wiki/installation，建议用源码安装
+(1)kalibr编译错误关于cv2-bridge，把import cv2改到
+import cv2-bridge之前。
 
 5、标定：
-(1)找到realsense-ros包，进入/catkin_ws/src/realsense-ros/realsense2_camera/launch（路径仅供参考），复制其中的rs_camera.launch，并重命名为rs_imu_calibration.launch(命名随意)，并对里面的内容做如下更改：
-<arg name="unite_imu_method"          default="linear_interpolation"/>
-(2)roslaunch realsense2_camera rs_imu_calibration.launch
+(1)找到realsense-ros包，进入/catkin_ws/src/realsense-ros/realsense2_camera/launch（路径仅供参考），修改其中的rs_camera.launch的参数。
+1.
+2.
+3.
+4.
+5.
+(2)启动命令为roslaunch realsense2_camera rs_camera.launch
 (3)编辑启动文件:
 gedit ~/imu_catkin_ws/src/imu_utils/launch/d455_imu_calibration.launch
 写入：
@@ -57,12 +63,13 @@ source ~/imu_catkin_ws/devel/setup.bash
 roslaunch imu_utils d455_imu_calibration.launch
 cd 存放imu_calibration.bag的路径
 rosbag play -r 200 imu_calibration.bag
-结果d455_imu_param.yaml
+结果d455_imu_param.yaml可在设定的目录内查看。
 
 二、多(双)相机标定：
 1、下载/购买标定板：https://github.com/ethz-asl/kalibr/wiki/downloads
-warn：本项目使用棋盘格标定
-新建yaml文件参考棋盘格_yaml文件夹里的april_129_A4.yaml
+warn：本项目使用棋盘格标定，aprilgrid与Checkerboard
+(棋盘格)，Circlegrid等标定板yaml文件模板不一样 需要自行查找。
+棋盘格类型请参考本项目yaml文件参考april_129_A4.yaml
 
 2、关闭结构光：
 roslaunch realsense2_camera rs_camera.launch
@@ -141,18 +148,14 @@ import cv_bridge
 
 三、IMU+双目相机标定：
 
-1、编写chain.yaml，格式参考Kalibr官方教程https://github.com/ethz-asl/kalibr/wiki/yaml-formats中的chain.yaml，具体的参数参考上面得到的yaml文件，没有的参数可以删除。
+1、编写chain.yaml，格式参考Kalibr官方教程https://github.com/ethz-asl/kalibr/wiki/yaml-formats中的chain.yaml，具体的参数参考上面得到的多目标定的yaml文件，没有的参数可以删除。
 
 2、编写imu.yaml，格式参考https://github.com/ethz-asl/kalibr/wiki/yaml-formats中的imu.yaml，具体参数使用之前imu标定得到的参数、没有的参数可以删除。
 
 3、准备好april_129_A4.yaml
 
-4、修改rs_camera.launch：
-<arg name="enable_sync"               default="true"/>
-<arg name="unite_imu_method"          default="linear_interpolation"/>
-
 5、启动realsense：
-roslaunch realsense2_camera rs_imu_stereo.launch
+roslaunch realsense2_camera rs_camera.launch
 
 6、关闭结构光(同上)
 
