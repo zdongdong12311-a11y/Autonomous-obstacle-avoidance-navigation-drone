@@ -124,7 +124,7 @@ sudo make install # 安装到系统目录
 五、根据kalib_标定进行标定
 
 六、测试：
-方法一：
+第一：
 1、打开一个终端 ，用roslaunch 打开realsense摄像头：
 source ~/catkin_ws/devel/setup.bash
 roslaunch realsense2_camera rs_camera.launch
@@ -136,8 +136,15 @@ source ~/catkin_ws/devel/setup.bash
 rosrun vins vins_node ~/catkin_ws/src/VINS-Fusion/config/yourconfig_path/your_config_file.yaml 
 绕着走了两个矩形，理论上打开回环检测模块，结果会更加精确
 注意，要关闭结构光，结构光会影响轨迹的准确性
-结果可以参考
+结果可以参考主目录里的：data-test-iamges.jpg
 
+第二：
+在kalib标定里的第五步的基础上观看/mavros/local_position/pose
+rostopic echo /mavros/local_position/pose
+观察飞机转一圈过程中位姿是否出现漂移，回到原点后位姿是否归零.
+eg:
+/mavros/vision_pose/pose输入飞控EKF2融合后告诉飞控:“我认为你现在在(2,y，z)。
+/mavros/local_position/pose飞控最终确认的:"结合了视觉、IMU、气压计，我确定我在(a,y,z)。
 
 七、ego-planner安装：
 mkdir -p ~/catkin_ws/src
