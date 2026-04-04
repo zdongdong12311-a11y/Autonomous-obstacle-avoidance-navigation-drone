@@ -139,7 +139,12 @@ rosrun vins vins_node ~/catkin_ws/src/VINS-Fusion/config/yourconfig_path/your_co
 结果可以参考主目录里的：data-test-iamges.jpg
 
 第二：
-在kalib标定里的第五步的基础上观看/mavros/local_position/pose
+启动：
+roslaunch realsense2_camera rs_camera.launch
+rosrun vins vins_node ~/catkin_ws/src/VINS-Fusion/config/yourconfig_path/your_config_file.yaml 
+roslaunch mavros px4.launch
+python3 vins-to-px4.py
+观看/mavros/local_position/pose:
 rostopic echo /mavros/local_position/pose
 观察飞机转一圈过程中位姿是否出现漂移，回到原点后位姿是否归零.
 eg:
