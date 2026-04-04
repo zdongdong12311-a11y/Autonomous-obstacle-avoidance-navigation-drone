@@ -19,8 +19,8 @@ catkin_make
 解决：将sumpixel_test.cpp中# include "backward.hpp"改为：#include “code_utils/backward.hpp”
 (3)‘CV_LOAD_IMAGE_GRAYSCALE’ was not declared in this scope
 解决：cd /home/a123/imu_catkin_ws/src/code_utils/src
-sed -i 's/CV_LOAD_IMAGE_GRAYSCALE/cv::IMREAD_GRAYSCALE/g' sumpixel_test.cpp
-sed -i 's/CV_LOAD_IMAGE_UNCHANGED/cv::IMREAD_UNCHANGED/g' mat_io_test.cpp
+sed -i 's/CV_LOAD_IMAGE_GRAYSCALE/cv::IMREAD_GRAYSCALE/g' sumpixel_test.cpp/n
+sed -i 's/CV_LOAD_IMAGE_UNCHANGED/cv::IMREAD_UNCHANGED/g' mat_io_test.cpp/n
 sed -i 's/CV_MINMAX/cv::NORM_MINMAX/g' sumpixel_test.cpp
 
 3、下载imu_utils:
