@@ -51,19 +51,19 @@ rs-enumerate-devices -o  查看是否有输出
 （2）realsense-viewer这个工具识别到了，但IMU没了，这个是用在cmake后面加-DFORCE_RSUSB_BACKEND=true（用USB后端编译）
 
 6、rs_camera.launch修改参数
-1.  <arg name="enable_infra"        default="true"/>
+1  <arg name="enable_infra"        default="true"/>
 
-2.  <arg name="enable_infra1"       default="true"/>
+2  <arg name="enable_infra1"       default="true"/>
 
-3.  <arg name="enable_infra2"       default="true"/>
+3  <arg name="enable_infra2"       default="true"/>
 
-4.  <arg name="enable_gyro"         default="true"/>
+4  <arg name="enable_gyro"         default="true"/>
 
-5.  <arg name="enable_accel"        default="true"/>
+5  <arg name="enable_accel"        default="true"/>
 
-6.  <arg name="enable_sync"         default="true"/>
+6  <arg name="enable_sync"         default="true"/>
 
-7.  <arg name="align_depth"         default="true"/>
+7  <arg name="align_depth"         default="true"/>
 
 三、realsense的ros包安装：
 
