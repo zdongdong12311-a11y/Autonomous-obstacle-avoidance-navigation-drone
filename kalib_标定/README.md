@@ -33,6 +33,8 @@ cd ..
 catkin_make
 
 4、下载编译Kalibr
+sudo apt update
+sudo apt install libsuitesparse-dev安装系统库
 参考官方教程https://github.com/ethz-asl/kalibr/wiki/installation，建议用源码
 验证安装：source ~/kalibr_workspace/devel/setup.bash
 kalibr_calibrate_cameras --help
