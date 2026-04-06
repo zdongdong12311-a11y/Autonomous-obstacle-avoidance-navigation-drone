@@ -141,7 +141,20 @@ sudo make install # 安装到系统目录
 
 五、根据kalib_标定进行标定
 
-六、测试：
+六、修改飞控参数：
+搜索 EKF2_EV_CTRL (如果是旧版固件，搜 EKF2_AID_MASK)
+勾选以下项（开启外部视觉融合）：
+☑️ Horizontal position fusion (水平位置)
+☑️ Vertical position fusion (垂直位置)
+☑️ Yaw fusion (偏航角/航向)
+🔍 搜索 EKF2_HGT_MODE
+修改为：Vision （高度融合模式：废弃气压计，用视觉定高。室内气压计会被空调风吹乱！）
+🔍 搜索 EKF2_GPS_CTRL
+取消所有勾选 (或者设为 0) （彻底关闭 GPS 融合！室内微弱的 GPS 反射信号会让飞机瞬间飞疯）
+🔍 搜索 EKF2_EV_DELAY
+修改为：50 （视觉延迟补偿。VINS 处理图像有延迟，填 50 毫秒能让飞控精准预测轨迹）
+
+七、测试：
 第一：
 1、打开一个终端 ，用roslaunch 打开realsense摄像头：
 source ~/catkin_ws/devel/setup.bash
@@ -169,7 +182,7 @@ eg:
 /mavros/vision_pose/pose输入飞控EKF2融合后告诉飞控:“我认为你现在在(2,y，z)。
 /mavros/local_position/pose飞控最终确认的:"结合了视觉、IMU、气压计，我确定我在(a,y,z)。
 
-七、ego-planner安装：
+八、ego-planner安装：
 mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src
 git clone https://github.com/ZJU-FAST-Lab/ego-planner.git
