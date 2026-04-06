@@ -218,7 +218,7 @@ WARN：可以直接查看和使用官方标定好的left.yaml、right.yaml的内
 roslaunch mavros Px4.launch
 2、修改realsense_stereo_imu_config.yaml中的imu话题，改为：imu/mavros/data_raw
 并根据realsense_stereo_imu_config.yaml里面outpath的路径建文件夹
-3、先测量d455相对于飞控的实际物理偏差值填入~/yourpath/realsense_stereo_imu_config.yaml。
+3、先测量d455相对于飞控的实际物理偏差值填入~/yourpath/realsense_stereo_imu_config.yaml并将load_previous_pose_graph参数改为1
 启动realsense_stereo_imu_config.yaml：
 rosrun ~/yourpath/realsense_stereo_imu_config.yaml
 4、查看飞机位姿信息：
