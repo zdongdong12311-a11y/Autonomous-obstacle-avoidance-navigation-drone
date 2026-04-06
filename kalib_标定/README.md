@@ -226,7 +226,7 @@ rostopic echo /vins_fusion/imu_propagate
 5、拿着飞机在空旷区域缓慢转两圈，最后把飞机放回起飞位置，查看飞机位姿的偏移量，终止程序，在output文件夹里面会生成vio文件，将里面的外参矩阵数据覆盖到realsense_stereo_imu_config.yaml里的参数矩阵。
 6、重复操作直到偏移量达到自己的要求。
 
-WARNNNN：飞控不好忽略第五步！！！
+WARNNNN：飞控不好用d455的imu
 
 参考：https://blog.csdn.net/qq_40186909/article/details/113104595
 感谢这篇文章的指导，感激不尽。
