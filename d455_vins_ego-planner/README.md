@@ -182,6 +182,18 @@ eg:
 /mavros/vision_pose/pose输入飞控EKF2融合后告诉飞控:“我认为你现在在(2,y，z)。
 /mavros/local_position/pose飞控最终确认的:"结合了视觉、IMU、气压计，我确定我在(a,y,z)。
 
+八、飞机悬停测试：
+terminal1：
+roslaunch realsense2_camera rs_camera.launch
+terminal2：
+cd vins-fusion
+source ./devel/setup.bash
+rosrun vins vins_node ~/catkin_ws/src/VINS-Fusion/config/yourconfig_path/your_config_file.yaml 
+terminal3:
+roslaunch mavros px4.launch
+terminal4:
+python3 
+
 八、ego-planner安装：
 mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src
