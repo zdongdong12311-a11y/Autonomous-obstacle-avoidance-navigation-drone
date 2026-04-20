@@ -53,6 +53,7 @@ param set NAV_DLL_ACT 0
 param set COM_OBL_RC_ACT 0
 param set COM_RCL_EXCEPT 4
 # 新开终端：
+export PYTHONPATH=$PYTHONPATH:~/ego_ws/devel/lib/python3/dist-packages
 python3 bridge.py 
 # 新开终端
 # 开启ego：
