@@ -238,10 +238,10 @@ terminal5：
 cd ~/ego_ws
 source ./devel/setup.bash
 python3 ego_ws/src/planner/plan_manage/scrpits/ego_bridge.py
-遥控器起飞，稳定后：
+遥控器起飞，稳定后、将遥控器切换至offboard模式：
 terminal6：
 cd ~/ego_ws
 source ./devel/setup.bash
 roslaunch ego_planner run_in_sim.launch
-飞机会自主飞向正前方3m住，并且绕开障碍物。
+飞机会自主飞向正前方3m处，并且绕开障碍物。
 
