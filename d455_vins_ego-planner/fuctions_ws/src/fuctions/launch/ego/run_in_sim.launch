@@ -1,0 +1,61 @@
+<launch>
+  <!-- 1. 地图大小设置 -->
+  <arg name="map_size_x" value="40.0"/>
+  <arg name="map_size_y" value="40.0"/>
+  <arg name="map_size_z" value="3.0"/>
+
+  <!-- 2. 里程计话题：必须与 VINS 输出的话题一致 -->
+  <arg name="odom_topic" value="/vins_estimator/odometry" />
+
+  <!-- 3. Ego-Planner 主算法参数 -->
+  <include file="$(find ego_planner)/launch/advanced_param.xml">
+    <arg name="map_size_x_" value="$(arg map_size_x)"/>
+    <arg name="map_size_y_" value="$(arg map_size_y)"/>
+    <arg name="map_size_z_" value="$(arg map_size_z)"/>
+    <arg name="odometry_topic" value="$(arg odom_topic)"/>
+
+    <!-- 相机位姿和深度图：实机请确保这两个话题有数据 -->
+    <arg name="camera_pose_topic" value="/vins_estimator/camera_pose"/>
+    <arg name="depth_topic" value="/camera/depth/image_rect_raw"/>
+
+    <!-- 激光雷达话题：如果不使用则留空 -->
+    <arg name="cloud_topic" value="/none_cloud"/>
+
+    <!-- D455 内参 (根据你的实际情况调整，默认 640x480) -->
+    <arg name="cx" value="324.3073014858"/>
+    <arg name="cy" value="243.7729373215"/>
+    <arg name="fx" value="385.6846229575"/>
+    <arg name="fy" value="386.6290224516"/>
+
+    <!-- 飞行性能限制：建议实机先调小 (0.5m/s) 确保安全 -->
+    <arg name="max_vel" value="0.5" />
+    <arg name="max_acc" value="0.8" />
+    <arg name="planning_horizon" value="7.5" /> 
+
+    <!-- 飞行模式控制 -->
+    <!-- 1: Rviz打点飞行 (2D Nav Goal) | 2: 预设航点飞行 -->
+    <arg name="flight_type" value="2" />
+    
+    <arg name="point_num" value="1" />
+    <arg name="point0_x" value="3" />
+    <arg name="point0_y" value="0.0" />
+    <arg name="point0_z" value="1.0" />
+  </include>
+
+  <!-- 4. 轨迹服务器：将规划结果转化为控制指令 -->
+  <node pkg="ego_planner" name="traj_server" type="traj_server" output="screen">
+    <!-- 🔥 注意：这里将输出重命名为 planning/pos_cmd，Python 脚本必须订阅这个 -->
+    <remap from="/position_cmd" to="planning/pos_cmd"/>
+    <remap from="/odom_world" to="$(arg odom_topic)"/>
+    <param name="traj_server/time_forward" value="1.0" type="double"/>
+  </node>
+
+  <!-- 5. 航点生成器 -->
+  <node pkg="waypoint_generator" name="waypoint_generator" type="waypoint_generator" output="screen">
+    <remap from="~odom" to="$(arg odom_topic)"/>        
+    <remap from="~goal" to="/move_base_simple/goal"/>
+    <remap from="~traj_start_trigger" to="/traj_start_trigger" />
+    <param name="waypoint_type" value="manual-lonely-waypoint"/>    
+  </node>
+
+</launch>

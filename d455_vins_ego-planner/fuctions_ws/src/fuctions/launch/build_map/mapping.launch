@@ -1,0 +1,25 @@
+<launch>
+  <!-- 1. 将深度图转换为 3D 点云 -->
+  <node pkg="nodelet" type="nodelet" name="depth_image_to_pointcloud" args="standalone depth_image_proc/point_cloud_xyz">
+    <remap from="image_rect" to="/camera/aligned_depth_to_color/image_raw"/>
+    <remap from="camera_info" to="/camera/aligned_depth_to_color/camera_info"/>
+    <remap from="points" to="/camera/depth/points"/>
+  </node>
+
+  <!-- 2. 启动 OctoMap 三维积木建图服务器 -->
+  <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
+    <!-- 积木块精度：0.1米 (10厘米一个方块) -->
+    <param name="resolution" value="0.1" />
+    
+    <param name="frame_id" type="string" value="map" />
+    
+    <!-- 过滤远处噪点，仅构建 4 米内的地图 -->
+    <param name="sensor_model/max_range" value="4.0" />
+    
+    <!-- 过滤掉地板，防止把平地当成障碍物 -->
+    <param name="filter_ground" value="true" />
+    <param name="ground_filter/distance" value="0.1" />
+
+    <remap from="cloud_in" to="/camera/depth/points" />
+  </node>
+</launch>
