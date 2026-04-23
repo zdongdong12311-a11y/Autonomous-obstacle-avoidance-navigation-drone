@@ -59,15 +59,15 @@ python3 ~/d455_vins_ego-planner/fuctions_ws/src/fuctions/scripts/autonomous_navi
 
 | 命令 | 功能 | 示例 |
 |------|------|------|
-| `/nav/takeoff` | 起飞 | `rosservice call /nav/takeoff 'data: 1.5'` |
-| `/nav/go_to` | 飞向(避障) | `rosservice call /nav/go_to 'data: "3 0 1.2"'` |
-| `/nav/return_home` | 返航 | `rosservice call /nav/return_home 'data: 1.2'` |
-| `/nav/land` | 降落 | `rosservice call /nav/land 'data: 0'` |
-| `/nav/hold` | 悬停 | `rosservice call /nav/hold 'data: 0'` |
-| `/nav/start_patrol` | 开始巡逻 | `rosservice call /nav/start_patrol 'data: 0'` |
-| `/nav/enable_tracking` | 启用避障追踪 | `rosservice call /nav/enable_tracking 'data: 1'` |
-| `/nav/stop` | 停止(切影子) | `rosservice call /nav/stop 'data: 0'` |
-| `/nav/status` | 查看状态 | `rosservice call /nav/status 'data: 0'` |
+| `/nav/takeoff` | 起飞（默认高度） | `rosservice call /nav/takeoff "{}"` |
+| `/nav/go_to` | 飞向下一个预置航点 | `rosservice call /nav/go_to "{}"` |
+| `/nav/return_home` | 返航（默认高度） | `rosservice call /nav/return_home "{}"` |
+| `/nav/land` | 降落 | `rosservice call /nav/land "{}"` |
+| `/nav/hold` | 悬停 | `rosservice call /nav/hold "{}"` |
+| `/nav/start_patrol` | 开始巡逻 | `rosservice call /nav/start_patrol "{}"` |
+| `/nav/enable_tracking` | 启用避障追踪 | `rosservice call /nav/enable_tracking "{}"` |
+| `/nav/stop` | 停止(切影子) | `rosservice call /nav/stop "{}"` |
+| `/nav/status` | 查看状态 | `rosservice call /nav/status "{}"` |
 
 ## Python接口
 
@@ -164,14 +164,14 @@ class NavConfig:
 # 2. 遥控器起飞→悬停→切OFFBOARD
 
 # 3. 测试命令
-rosservice call /nav/status 'data: 0'           # 查看状态
-rosservice call /nav/takeoff 'data: 1.5'        # 起飞
-rosservice call /nav/go_to 'data: "3 0 1.2"'   # 飞向(避障)
-rosservice call /nav/return_home 'data: 1.2'   # 返航
-rosservice call /nav/land 'data: 0'            # 降落
+rosservice call /nav/status "{}"            # 查看状态
+rosservice call /nav/takeoff "{}"           # 起飞
+rosservice call /nav/go_to "{}"             # 飞向下一个预置航点(避障)
+rosservice call /nav/return_home "{}"       # 返航
+rosservice call /nav/land "{}"              # 降落
 
 # 或者巡逻
-rosservice call /nav/start_patrol 'data: 0'    # 开始巡逻
+rosservice call /nav/start_patrol "{}"         # 开始巡逻
 ```
 
 ## 故障排除
