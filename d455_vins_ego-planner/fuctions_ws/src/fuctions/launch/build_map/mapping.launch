@@ -1,25 +1,48 @@
 <launch>
-  <!-- 1. 将深度图转换为 3D 点云 -->
-  <node pkg="nodelet" type="nodelet" name="depth_image_to_pointcloud" args="standalone depth_image_proc/point_cloud_xyz">
-    <remap from="image_rect" to="/camera/aligned_depth_to_color/image_raw"/>
-    <remap from="camera_info" to="/camera/aligned_depth_to_color/camera_info"/>
-    <remap from="points" to="/camera/depth/points"/>
-  </node>
+  <!-- 1. 静态 TF 桥梁：连接 VINS 的身体中心和 D455 相机外壳 -->
+  <!-- 这里的参数 0.1 0 0 表示相机在中心前方 10cm，请根据实际安装位置微调 -->
+  <node pkg="tf" type="static_transform_publisher" name="vins_to_camera_tf" 
+        args="0.1 0 0 0 0 0 body camera_link 100" />
 
-  <!-- 2. 启动 OctoMap 三维积木建图服务器 -->
-  <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
-    <!-- 积木块精度：0.1米 (10厘米一个方块) -->
-    <param name="resolution" value="0.1" />
-    
-    <param name="frame_id" type="string" value="map" />
-    
-    <!-- 过滤远处噪点，仅构建 4 米内的地图 -->
-    <param name="sensor_model/max_range" value="4.0" />
-    
-    <!-- 过滤掉地板，防止把平地当成障碍物 -->
-    <param name="filter_ground" value="true" />
-    <param name="ground_filter/distance" value="0.1" />
+  <!-- 2. RTAB-Map 核心配置 -->
+  <group ns="rtabmap">
+    <!-- 使用 rtabmap_slam 节点（针对新版模块化源码） -->
+    <node name="rtabmap" pkg="rtabmap_slam" type="rtabmap" output="screen" args="--delete_db_on_start">
+      
+      <!-- 坐标系设置 -->
+      <param name="frame_id"            type="string" value="body"/> <!-- 匹配你在 C++ 里改的名字 -->
+      <param name="odom_frame_id"       type="string" value="world"/>     <!-- VINS 的父级坐标系 -->
+      <param name="map_frame_id"        type="string" value="map"/>
 
-    <remap from="cloud_in" to="/camera/depth/points" />
-  </node>
+      <!-- 数据订阅 -->
+      <param name="subscribe_depth"     type="bool" value="true"/>
+      <param name="subscribe_rgb"       type="bool" value="true"/>
+      <param name="visual_odometry"     type="bool" value="false"/> <!-- 禁用自带里程计，节省CPU -->
+
+      <!-- 话题映射 -->
+      <remap from="rgb/image"           to="/camera/color/image_raw"/>
+      <remap from="depth/image"         to="/camera/aligned_depth_to_color/image_raw"/>
+      <remap from="rgb/camera_info"     to="/camera/color/camera_info"/>
+      <remap from="odom"               to="/vins_estimator/odometry"/>
+
+      <!-- 容错优化：解决 Extrapolation Error (时间预测错误) -->
+      <param name="wait_for_transform_duration" type="double" value="0.5"/> <!-- 增加等待时间容忍度 -->
+      <param name="approx_sync"                 type="bool"   value="true"/> <!-- 开启近似时间同步 -->
+      <param name="queue_size"                  type="int"    value="50"/>   <!-- 增大缓存队列 -->
+
+      <!-- RTAB-Map 算法性能优化 (针对 Orange Pi 5) -->
+      <param name="Rtabmap/DetectionRate"       type="string" value="1"/>    <!-- 1Hz更新地图，足够避障 -->
+      <param name="RGBD/AngularUpdate"          type="string" value="0.05"/> <!-- 减少冗余计算 -->
+      <param name="RGBD/LinearUpdate"           type="string" value="0.05"/>
+      <param name="Mem/IncrementalMemory"       type="string" value="true"/>
+      <param name="Mem/InitWMWithAllNodes"      type="string" value="false"/> <!-- 减少启动内存 -->
+
+      <!-- 避障地图输出设置 -->
+      <param name="Grid/Sensor"                 type="string" value="true"/>  <!-- 启用深度传感器建图 -->
+      <param name="Grid/MaxObstacleHeight"      type="string" value="1.8"/>   <!-- 超过1.8米不算障碍（针对无人机高度） -->
+      <param name="Grid/CellSize"               type="string" value="0.1"/>   <!-- 0.1米分辨率对避障最均衡 -->
+      <param name="Grid/RayTracing"             type="string" value="true"/>  <!-- 开启射线追踪清理动态障碍物 -->
+      <param name="Grid/RangeMax"               type="string" value="4.0"/>   <!-- 探测 4 米内的障碍物 -->
+    </node>
+  </group>
 </launch>
