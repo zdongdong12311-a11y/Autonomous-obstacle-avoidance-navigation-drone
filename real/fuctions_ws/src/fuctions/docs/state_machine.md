@@ -59,6 +59,7 @@ python3 ~/d455_vins_ego-planner/fuctions_ws/src/fuctions/scripts/autonomous_navi
 
 | 命令 | 功能 | 示例 |
 |------|------|------|
+解锁 ：rosservice call /mavros/cmd/arming True
 | `/nav/takeoff` | 起飞（默认高度） | `rosservice call /nav/takeoff "{}"` |
 | `/nav/go_to` | 飞向下一个预置航点 | `rosservice call /nav/go_to "{}"` |
 | `/nav/return_home` | 返航（默认高度） | `rosservice call /nav/return_home "{}"` |
@@ -183,3 +184,7 @@ rosservice call /nav/start_patrol "{}"         # 开始巡逻
 | 起飞被拒绝 | VINS未就绪 | 等待VINS初始化 |
 | 飞机不受控 | 未发心跳包 | 检查ego_bridge.py |
 | 避障不生效 | 未enable_tracking | 先调用enable_tracking |
+
+速度调节：
+想让飞机飞慢点： 将 _smooth_factor 调小（例如 0.05 或 0.1）。飞机会显得更“肉”，反应变迟钝，从而降低实际飞行速度。
+想让飞机飞快点： 将 _smooth_factor 调大（例如 0.3 或 0.5）。飞机会更紧贴规划器的路径，加速更快。
